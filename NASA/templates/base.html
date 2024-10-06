@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Solar System</title>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+	<div class="sidebar">
+		<div class="sidebar-list">
+			<div class="sidebar-item">
+				<img src="{% static 'img/search.png' %}" alt="">
+				<p>Search</p>
+			</div>
+			<div class="sidebar-item">
+				<img src="{% static 'img/filter.png' %}" alt="">
+				<p>Filter</p>
+			</div>
+			<div class="sidebar-item">
+				<img src="{% static 'img/download.png' %}" alt="">
+				<p>Download</p>
+			</div>
+		</div>
+
+	</div>
+	<div class="content">
+		{% block content %}
+		
+		{% endblock content %}
+	</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+* {
+	margin: 0;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	background: #292643;
+
+	display: flex;
+}
+
+.sidebar {
+	margin: 1vh;
+	width: 280px;	
+	height: 98vh;	
+	background: linear-gradient(180deg, rgba(131, 127, 212, 0.5) 0%, rgba(68, 66, 110, 0.5) 99.99%);	
+}
+
+.sidebar-list {
+	margin-left: 15px;
+	padding-top: 15px;
+}
+
+.sidebar-item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.sidebar-item > img {
+	width: 48px;
+}
+
+.sidebar-item > p {
+	color: #B2B5EF;
+	font-size: 23px;
+	margin-left: 10px;
+}
+
+#solar-system {
+	width: 1650px;
+	height: 100vh;
+	position: relative;
+}
+
+.range_box {
+	position: absolute;
+	left: 25%;
+	bottom: 10px;
+	width: 70%;
+	/* height: 50px; */
+}
+
+.range {
+	width: 70%;
+	/* height: 50px; */
+}
+
+.numbers {
+	display: flex;
+	gap: 58.5px;	
+}
+
+.numbers > p {
+	color: white;
+}

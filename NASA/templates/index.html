@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div id="solar-system">
+		<div class="range_box">
+			<input type="range" class="range" value="100" min="0" max="200">
+			<div class="numbers">
+				<p>0.0</p>
+				<p>0.2</p>
+				<p>0.4</p>
+				<p>0.6</p>
+				<p>0.8</p>
+				<p>1.0</p>
+				<p>2.0</p>
+				<p>4.0</p>
+				<p>6.0</p>
+				<p>8.0</p>
+				<p>10</p>
+			</div>
+		</div>
+	</div>
+
+	
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/examples/js/controls/OrbitControls.js"></script>
+	<script src="{% static 'js/three.js' %}"></script>
+{% endblock content %}

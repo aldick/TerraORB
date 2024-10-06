@@ -1,0 +1,14 @@
+asgiref==3.8.1
+astropy==6.1.4
+astropy-iers-data==0.2024.9.30.0.32.59
+Django==5.1.1
+numpy==2.1.2
+packaging==24.1
+pandas==2.2.3
+pyerfa==2.0.1.4
+python-dateutil==2.9.0.post0
+pytz==2024.2
+PyYAML==6.0.2
+six==1.16.0
+sqlparse==0.5.1
+tzdata==2024.2
