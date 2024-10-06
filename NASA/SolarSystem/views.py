@@ -21,6 +21,7 @@ def add_to_db(request, name, description, e, a, i, anc, ma, pd, pa, is_pha):
         meanAnomaly = ma,
         perihelionDistance = pd, 
         perihelionArgument = pa,
+        is_pha = is_pha
     )
     pha.save()
     

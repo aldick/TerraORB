@@ -10,11 +10,17 @@ body {
 	display: flex;
 }
 
+h1 {
+	width: 280px;
+}
+
 .sidebar {
 	margin: 1vh;
 	width: 280px;	
 	height: 98vh;	
 	background: linear-gradient(180deg, rgba(131, 127, 212, 0.5) 0%, rgba(68, 66, 110, 0.5) 99.99%);	
+	display: flex;
+	flex-direction: column;
 }
 
 .sidebar-list {
@@ -64,4 +70,66 @@ body {
 
 .numbers > p {
 	color: white;
+}
+
+.testimonial-slider-container {
+    position: relative;
+    overflow: hidden;
+}
+.slider {
+    display: flex;
+	flex-direction: column;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.slide > p,
+.slide > h3 {
+	color: #B2B5EF;
+}
+
+.testimonial-points {
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+    gap: 5px;
+}
+
+/* .testimonial-point {
+    width: 15px; 
+    height: 15px; 
+    border-radius: 50%; 
+    background: #c4c4c4;
+}
+
+.testimonial-point-active {
+    width: 18px;
+    height: 18px;
+    border: none;
+} */
+
+.prev-button,
+.next-button {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+	color: #B2B5EF;
+}
+
+.prev-button {
+    left: 10px;
+}
+  
+.next-button {
+    right: 10px;
 }

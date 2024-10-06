@@ -107,7 +107,7 @@ function position(e, a, q, i, node, peri, m) {
 }
 
 function createAsteroid(x, y, z) {
-  const planetGeometry = new THREE.SphereGeometry(0.1, 6, 6);
+  const planetGeometry = new THREE.SphereGeometry(1, 6, 6);
   const planetMaterial = new THREE.MeshLambertMaterial({ color: 0x3208F2 });
   const planet = new THREE.Mesh(planetGeometry, planetMaterial);
 
@@ -123,79 +123,81 @@ var options = {
 	method: 'GET',
 }
 let JsonData;
-for(let i=0; i<5; i++) {
-  fetch(`http://api.nasa.gov/neo/rest/v1/neo/browse?page=${i}&size=100&api_key=qVwJOfcpAzIEcPNhVbSbqyiNgj3sNcoX4ARLciyS`, options)
-  .then(function(response){
-    if(response.status == 200){
-      return response.json();
-    }
-  })
-  .then(function(data){ 
-    JsonData = data;
-    // console.log(data.near_earth_objects[0])
-  })
-  .then(function(a) {
-    if (JsonData != null) {
+fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=2015-09-07&end_date=2015-09-08&detailed=false&api_key=qVwJOfcpAzIEcPNhVbSbqyiNgj3sNcoX4ARLciyS`, options)
+.then(function(response){
+  if(response.status == 200){
+    return response.json();
+  }
+})
+.then(function(data){ 
+  JsonData = data;
+  // console.log(data.near_earth_objects["2015-09-08"])
+})
+.then(function(a) {
+  if (JsonData != null) {
+    
+    for (let k=0; k<JsonData.element_count; k++) {
+      let asteroid = JsonData.near_earth_objects["2015-09-08"][k];
+      let eccentricity, semiMajorAxis, inclination, ascendingNodeLongitude, meanAnomaly, perihelionDistance, perihelionArgument
+      fetch(asteroid.links.self) 
+      .then(function(response){
+        if(response.status == 200){
+          return response.json();
+        }
+      })
+      .then(function(data){ 
+        asteroid = data
+        console.log(asteroid)
+        eccentricity = +asteroid.orbital_data.eccentricity;
+        semiMajorAxis = +asteroid.orbital_data.semi_major_axis; // in AU
+        inclination = (+asteroid.orbital_data.inclination); // convert degrees to radians
+        ascendingNodeLongitude = (+asteroid.orbital_data.ascending_node_longitude); // convert degrees to radians
+        meanAnomaly = +(asteroid.orbital_data.mean_anomaly); // convert degrees to radians
+        perihelionDistance = +asteroid.orbital_data.perihelion_distance
+        perihelionArgument = +asteroid.orbital_data.perihelion_argument
+        // const is_PHA = asteroid.is_potentially_hazardous_asteroid
+      })
       
-      for (let k=0; k<20; k++) {
-        let asteroid = JsonData.near_earth_objects[k];
-        console.log(asteroid, k)
-        const name = asteroid.name;
-        const description = asteroid.orbital_data.orbit_class.orbit_class_description;
-        const eccentricity = +asteroid.orbital_data.eccentricity;
-        const semiMajorAxis = +asteroid.orbital_data.semi_major_axis; // in AU
-        const inclination = (+asteroid.orbital_data.inclination); // convert degrees to radians
-        const ascendingNodeLongitude = (+asteroid.orbital_data.ascending_node_longitude); // convert degrees to radians
-        const meanAnomaly = (+asteroid.orbital_data.mean_anomaly); // convert degrees to radians
-        const perihelionDistance = +asteroid.orbital_data.perihelion_distance
-        const perihelionArgument = +asteroid.orbital_data.perihelion_argument
-        const is_PHA = asteroid.is_potentially_hazardous_asteroid
-        fetch(`127.0.0.1:8000/${name}/${description}/${eccentricity}/${semiMajorAxis}/${inclination}/${ascendingNodeLongitude}/${mean_anomaly}/${meanAnomaly}/${perihelionDistance}/${perihelionArgument}`)
-        // Step 1: Calculate Eccentric Anomaly (E) using Newton's method
-        // function keplersEquation(M, e, E0) {
-        //     return E0 - (E0 - e * Math.sin(E0) - M);
-        // }
-        // TODO bug fixes of asteroid
-        // TODO add filter
-        // TODO add search
-        // TODO add labels
-        // TODO replace 3d models
-  
-        // let E = meanAnomaly; // Initial guess for E
-        // for (let i = 0; i < 10; i++) { // Iterate to solve for E
-        //     E = keplersEquation(meanAnomaly, eccentricity, E);
-        // }
-  
-        // // Step 2: Calculate True Anomaly (ν)
-        // const nu = 2 * Math.atan2(Math.sqrt(1 + eccentricity) * Math.sin(E / 2), 
-        //                           Math.sqrt(1 - eccentricity) * Math.cos(E / 2));
-  
-        // // Step 3: Calculate the radius (r)
-        // const r = semiMajorAxis * (1 - eccentricity * Math.cos(E));
-  
-        // // Step 4: Position in the orbital plane (x', y')
-        // const xPrime = r * Math.cos(nu);
-        // const yPrime = r * Math.sin(nu);
-  
-        // // Step 5: Convert to 3D coordinates (x, y, z)
-        // const x = xPrime * (Math.cos(ascendingNodeLongitude) * Math.cos(nu) - 
-        //                     Math.sin(ascendingNodeLongitude) * Math.sin(nu) * Math.cos(inclination));
-        // const y = xPrime * (Math.sin(ascendingNodeLongitude) * Math.cos(nu) + 
-        //                     Math.cos(ascendingNodeLongitude) * Math.sin(nu) * Math.cos(inclination));
-        // const z = yPrime * Math.sin(inclination);
-  
-        // createAsteroid(x.toFixed(6), y.toFixed(6), z.toFixed(6))
-        // Print the results
-  
-        pos = position(eccentricity, semiMajorAxis, perihelionDistance, inclination, ascendingNodeLongitude, perihelionArgument, meanAnomaly)
-        createAsteroid(pos[0], pos[1], pos[2])
-        console.log(`x: ${pos[0].toFixed(6)} AU`);
-        console.log(`y: ${pos[1].toFixed(6)} AU`);
-        console.log(`z: ${pos[2].toFixed(6)} AU`);
-      }
+      // TODO bug fixes of asteroid
+      // TODO add filter
+      // TODO add search
+      // TODO add labels
+      // TODO replace 3d models
+
+      // let E = meanAnomaly; // Initial guess for E
+      // for (let i = 0; i < 10; i++) { // Iterate to solve for E
+      //     E = keplersEquation(meanAnomaly, eccentricity, E);
+      // }
+
+      // // Step 2: Calculate True Anomaly (ν)
+      // const nu = 2 * Math.atan2(Math.sqrt(1 + eccentricity) * Math.sin(E / 2), 
+      //                           Math.sqrt(1 - eccentricity) * Math.cos(E / 2));
+
+      // // Step 3: Calculate the radius (r)
+      // const r = semiMajorAxis * (1 - eccentricity * Math.cos(E));
+
+      // // Step 4: Position in the orbital plane (x', y')
+      // const xPrime = r * Math.cos(nu);
+      // const yPrime = r * Math.sin(nu);
+
+      // // Step 5: Convert to 3D coordinates (x, y, z)
+      // const x = xPrime * (Math.cos(ascendingNodeLongitude) * Math.cos(nu) - 
+      //                     Math.sin(ascendingNodeLongitude) * Math.sin(nu) * Math.cos(inclination));
+      // const y = xPrime * (Math.sin(ascendingNodeLongitude) * Math.cos(nu) + 
+      //                     Math.cos(ascendingNodeLongitude) * Math.sin(nu) * Math.cos(inclination));
+      // const z = yPrime * Math.sin(inclination);
+
+      // createAsteroid(x.toFixed(6), y.toFixed(6), z.toFixed(6))
+      // Print the results
+
+      pos = position(eccentricity, semiMajorAxis, perihelionDistance, inclination, ascendingNodeLongitude, perihelionArgument, meanAnomaly)
+      createAsteroid(pos[0], pos[1], pos[2])
+      console.log(`x: ${pos[0].toFixed(6)} AU`);
+      console.log(`y: ${pos[1].toFixed(6)} AU`);
+      console.log(`z: ${pos[2].toFixed(6)} AU`);
     }
-  });
-}
+  }
+});
 
 // Set initial camera position and angles
 let cameraDistance = 50;
@@ -343,6 +345,74 @@ document.addEventListener('mouseup', () => {
   isDragging = false;
   isInputing = false;
 });
+
+// let raycaster = new THREE.Raycaster();
+// let mouse = new THREE.Vector2();
+// console.log(planets)
+
+// document.getElementById("solar-system").addEventListener("click", function () {
+//   // получить позицию мышки относительно игрового бокса
+//   let solar_system = document.getElementById('solar-system');
+//   ww = (solar_system.offsetWidth);
+//   hh = (solar_system.offsetHeight);
+//   const xMouse = event.offsetX;
+//   const yMouse = event.offsetY;
+//   mouse.x = ( xMouse / ww ) * 2 - 1;
+//   mouse.y = - ( yMouse / hh ) * 2 + 1;
+//   raycaster.setFromCamera( mouse, camera );
+//   // получаем массив объектов, по которым был сделан щелчок
+//   let intersects = raycaster.intersectObjects( planets );
+//   // если этот массив не пустой
+//   if ( intersects.length > 0 ) {
+//       // получаем самый первый объект, по которому щёлкнули
+//       let answer = intersects[0];
+//       if(answer.object === planets[0]){
+//           alert("Сфера");
+//       }
+//       if(answer.object === planets[1]){
+//           alert("Конус");
+//       }
+//       if(answer.object === objects[2]){
+//           alert("Плоскость");
+//       }
+//   }
+// }); 
+
+const slider = document.querySelector('.slider');
+const prevButton = document.querySelector('.prev-button');
+const nextButton = document.querySelector('.next-button');
+const slides = Array.from(slider.querySelectorAll('.slide'));
+const slideCount = slides.length;
+let slideIndex = 0;
+
+const firstPoint = document.querySelector('.testimonial-point1');
+const secondPoint = document.querySelector('.testimonial-point2');
+const thirdPoint = document.querySelector('.testimonial-point3');
+
+prevButton.addEventListener('click', showPreviousSlide);
+nextButton.addEventListener('click', showNextSlide);
+
+function showPreviousSlide() {
+	slideIndex = (slideIndex - 1 + slideCount) % slideCount;
+	updateSlider();
+}
+  
+function showNextSlide() {
+	slideIndex = (slideIndex + 1) % slideCount;
+	updateSlider();
+}
+  
+function updateSlider() {
+	slides.forEach((slide, index) => {
+		if (index === slideIndex) {
+			slide.style.display = 'flex';
+	  	} else {
+			slide.style.display = 'none';
+	  	}
+	});
+}
+  
+updateSlider();
 
 // Start animation
 traceOrbits();
